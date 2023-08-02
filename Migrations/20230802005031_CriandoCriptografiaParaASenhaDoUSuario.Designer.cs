@@ -11,8 +11,8 @@ using TotalControlAPI.Data;
 namespace TotalControlAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230723024122_IniciandoOSistema")]
-    partial class IniciandoOSistema
+    [Migration("20230802005031_CriandoCriptografiaParaASenhaDoUSuario")]
+    partial class CriandoCriptografiaParaASenhaDoUSuario
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,7 +110,7 @@ namespace TotalControlAPI.Migrations
                     b.ToTable("Endereco");
                 });
 
-            modelBuilder.Entity("TotalControlAPI.Models.Pessoas", b =>
+            modelBuilder.Entity("TotalControlAPI.Models.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,6 +134,16 @@ namespace TotalControlAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PasswordSalt")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Senha")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -141,11 +151,17 @@ namespace TotalControlAPI.Migrations
                     b.Property<int?>("Sexo")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("TokenCreated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("TokenExpired")
+                        .HasColumnType("datetime(6)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EnderecoId");
 
-                    b.ToTable("Pessoas");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TotalControlAPI.Models.ControleMensal", b =>
@@ -157,7 +173,7 @@ namespace TotalControlAPI.Migrations
                     b.Navigation("NomeCategoria");
                 });
 
-            modelBuilder.Entity("TotalControlAPI.Models.Pessoas", b =>
+            modelBuilder.Entity("TotalControlAPI.Models.Users", b =>
                 {
                     b.HasOne("TotalControlAPI.Models.Endereco", "Endereco")
                         .WithMany()

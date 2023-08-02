@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TotalControlAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class IniciandoOSistema : Migration
+    public partial class CriandoCriptografiaParaASenhaDoUSuario : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -85,7 +85,7 @@ namespace TotalControlAPI.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Pessoas",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -100,13 +100,21 @@ namespace TotalControlAPI.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EnderecoId = table.Column<int>(type: "int", nullable: true),
                     Senha = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PasswordHash = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PasswordSalt = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RefreshToken = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TokenCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    TokenExpired = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pessoas", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pessoas_Endereco_EnderecoId",
+                        name: "FK_Users_Endereco_EnderecoId",
                         column: x => x.EnderecoId,
                         principalTable: "Endereco",
                         principalColumn: "Id");
@@ -119,8 +127,8 @@ namespace TotalControlAPI.Migrations
                 column: "NomeCategoriaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pessoas_EnderecoId",
-                table: "Pessoas",
+                name: "IX_Users_EnderecoId",
+                table: "Users",
                 column: "EnderecoId");
         }
 
@@ -131,7 +139,7 @@ namespace TotalControlAPI.Migrations
                 name: "ControleMensal");
 
             migrationBuilder.DropTable(
-                name: "Pessoas");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Categorias");

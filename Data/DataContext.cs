@@ -14,7 +14,7 @@ namespace TotalControlAPI.Data
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
-        public DbSet<Pessoas> Pessoas => Set<Pessoas>();
+        public DbSet<Users> Users => Set<Users>();
         public DbSet<Endereco> Endereco => Set<Endereco>();
         public DbSet<ControleMensal> ControleMensal => Set<ControleMensal>();
         public DbSet<Categorias> Categorias => Set<Categorias>();
