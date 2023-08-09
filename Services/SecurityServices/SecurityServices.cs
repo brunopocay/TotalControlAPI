@@ -1,19 +1,22 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
+
 namespace TotalControlAPI.Services.SecurityServices
 {
-    public class SecurityServices : ISecurityService
-    {
+    public class SecurityServices : Controller, ISecurityService
+    {      
         private readonly IConfiguration _configuration;
-
-        public SecurityServices(IConfiguration configuration)
+        private readonly DataContext _dataContext;
+        
+        public SecurityServices(IConfiguration configuration, DataContext context)
         {
-            this._configuration = configuration;            
+            _configuration = configuration;   
+            _dataContext = context;
         }    
 
         public void CreatePasswordHash(string password, out string passwordHashBase64, out string passwordSaltBase64)
@@ -59,5 +62,39 @@ namespace TotalControlAPI.Services.SecurityServices
             }   
                 
         }
+
+        public RefreshToken GenerateRefreshToken(Users user)
+        {
+            var refreshToken = new RefreshToken
+            {          
+                UserId = user.Id,
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expires = DateTime.Now.AddDays(7),
+                Created = DateTime.Now
+            };
+
+            _dataContext.RefreshToken.Add(refreshToken);
+            _dataContext.SaveChanges();
+            return refreshToken;
+        }
+
+        public Users SetRefreshToken(Users user, RefreshToken newRefreshToken, HttpResponse response)
+        {
+       
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = newRefreshToken.Expires,
+            };
+            response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
+                   
+            user.RefreshToken = newRefreshToken.Token;
+            user.DateCreated = newRefreshToken.Created;
+            user.TokenExpires = newRefreshToken.Expires;
+
+            _dataContext.Users.Add(user);
+            _dataContext.SaveChanges();           
+            return user;
+        }       
     }
 }

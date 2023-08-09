@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TotalControlAPI.Services.SecurityServices;
-using TotalControlAPI.Services.UserServices;
 
 namespace TotalControlAPI.Controllers
 {

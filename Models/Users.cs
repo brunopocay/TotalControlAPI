@@ -11,12 +11,13 @@ namespace TotalControlAPI.Models
         public int? Sexo { get; set; }
         public string Email { get; set; } = "";
         public virtual Endereco? Endereco { get; set; }
+        [NotMapped]
         public string Senha { get; set; } = "";
         public string PasswordHash { get; set; } 
         public string PasswordSalt { get; set; } 
         public string RefreshToken { get; set; } = string.Empty;
-        public DateTime TokenCreated { get; set; }
-        public DateTime TokenExpired { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime TokenExpires{ get; set; }
 
     }
 

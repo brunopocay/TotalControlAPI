@@ -3,6 +3,6 @@
     public interface IUserService
     {
         Task<Users> Register(UserRegisterDTO pessoa);
-        
+        public string GetMyName();
     }
 }

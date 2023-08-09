@@ -18,6 +18,7 @@ namespace TotalControlAPI.Data
         public DbSet<Endereco> Endereco => Set<Endereco>();
         public DbSet<ControleMensal> ControleMensal => Set<ControleMensal>();
         public DbSet<Categorias> Categorias => Set<Categorias>();
+        public DbSet<RefreshToken> RefreshToken => Set<RefreshToken>();
        
     }
 }
