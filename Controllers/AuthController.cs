@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using TotalControlAPI.Models;
 
 namespace TotalControlAPI.Controllers
 {
@@ -39,7 +42,7 @@ namespace TotalControlAPI.Controllers
 
             if(!_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash, user.PasswordSalt))
             {                                
-                return BadRequest("Usuario não encontrado ou senha incorreta.1");
+                return BadRequest("Usuario não encontrado ou senha incorreta.");
             }
 
             string token = _securityService.CreateToken(user);
@@ -53,9 +56,9 @@ namespace TotalControlAPI.Controllers
         public ActionResult<string> RefreshToken(UserRequestDTO request)
         {
             var user = _dataContext.Users.SingleOrDefault(u => u.Email == request.Email);
-            if(user is null)
+            if(user is null || !_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash, user.PasswordSalt))
             {
-                return BadRequest("User not found.");
+                return BadRequest("Usuario não encontrado ou senha incorreta.");
             }
 
             var refreshToken = Request.Cookies["refreshToken"];

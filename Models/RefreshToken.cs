@@ -4,8 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace TotalControlAPI.Models
 {
     public class RefreshToken
-    {
-        [Key]
+    {       
         public int Id { get; set; }
         [ForeignKey("Users")]
         public int UserId { get; set; }

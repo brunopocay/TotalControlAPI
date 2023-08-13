@@ -16,7 +16,7 @@ namespace TotalControlAPI.Models
         public string PasswordHash { get; set; } 
         public string PasswordSalt { get; set; } 
         public string RefreshToken { get; set; } = string.Empty;
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; } 
         public DateTime TokenExpires{ get; set; }
 
     }
@@ -24,6 +24,6 @@ namespace TotalControlAPI.Models
     enum Sexo
     {
         Feminino,
-        Masculino
+        Masculino,
     }
 }

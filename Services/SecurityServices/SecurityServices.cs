@@ -9,7 +9,8 @@ using System.Text;
 namespace TotalControlAPI.Services.SecurityServices
 {
     public class SecurityServices : Controller, ISecurityService
-    {      
+    {
+        Users user = new Users();
         private readonly IConfiguration _configuration;
         private readonly DataContext _dataContext;
         
@@ -92,7 +93,7 @@ namespace TotalControlAPI.Services.SecurityServices
             user.DateCreated = newRefreshToken.Created;
             user.TokenExpires = newRefreshToken.Expires;
 
-            _dataContext.Users.Add(user);
+            _dataContext.Users.Update(user);
             _dataContext.SaveChanges();           
             return user;
         }       
