@@ -9,11 +9,13 @@ namespace TotalControlAPI.Services.UserServices
         private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _contextAccessor;
-        public UserService(IMapper mapper,DataContext context, IHttpContextAccessor contextAccessor)
+        private readonly ISecurityService _securityService;
+        public UserService(IMapper mapper,DataContext context, IHttpContextAccessor contextAccessor, ISecurityService security)
         {
             _context = context;
             _mapper = mapper; 
             _contextAccessor = contextAccessor;
+            _securityService = security;
         }
 
         public string GetMyName()
@@ -28,8 +30,14 @@ namespace TotalControlAPI.Services.UserServices
         public async Task<Users> Register(UserRegisterDTO newUser)
         {
             var user = _mapper.Map<Users>(newUser);
+
+            _securityService.CreatePasswordHash(user.Senha, out string passwordHash, out string passwordSalt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
             return user;
         }
 

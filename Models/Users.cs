@@ -13,8 +13,8 @@ namespace TotalControlAPI.Models
         public virtual Endereco? Endereco { get; set; }
         [NotMapped]
         public string Senha { get; set; } = "";
-        public string PasswordHash { get; set; } 
-        public string PasswordSalt { get; set; } 
+        public string? PasswordHash { get; set; } 
+        public string? PasswordSalt { get; set; } 
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime DateCreated { get; set; } 
         public DateTime TokenExpires{ get; set; }

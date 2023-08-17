@@ -21,10 +21,6 @@ namespace TotalControlAPI.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<Users>> Register(UserRegisterDTO user)
         {
-            _securityService.CreatePasswordHash(user.Senha, out string passwordHash, out string passwordSalt);     
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-
             var userAlreadyExists = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);       
             
             if(userAlreadyExists != null)

@@ -40,7 +40,7 @@ namespace TotalControlAPI.Controllers
                 return BadRequest("Usuario não encontrado ou senha incorreta.");
             }
 
-            if(!_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash, user.PasswordSalt))
+            if(!_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash!, user.PasswordSalt!))
             {                                
                 return BadRequest("Usuario não encontrado ou senha incorreta.");
             }
@@ -56,7 +56,7 @@ namespace TotalControlAPI.Controllers
         public ActionResult<string> RefreshToken(UserRequestDTO request)
         {
             var user = _dataContext.Users.SingleOrDefault(u => u.Email == request.Email);
-            if(user is null || !_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash, user.PasswordSalt))
+            if(user is null || !_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash!, user.PasswordSalt!))
             {
                 return BadRequest("Usuario não encontrado ou senha incorreta.");
             }
