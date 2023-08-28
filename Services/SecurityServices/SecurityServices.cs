@@ -34,8 +34,13 @@ namespace TotalControlAPI.Services.SecurityServices
 
         public string CreateToken(Users user)
         {
+            string genderValue = user.Sexo == 0 ? "Feminino" : "Masculino";
+
             List<Claim> claims = new List<Claim>() {
-                new Claim(ClaimTypes.Name, user.Email)
+                new Claim(ClaimTypes.Name, user.Nome),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Gender, genderValue),
+                new Claim(ClaimTypes.DateOfBirth, user.DataNasc.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));

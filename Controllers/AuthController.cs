@@ -79,6 +79,25 @@ namespace TotalControlAPI.Controllers
             return Ok(token);
         }
 
+        [HttpPost("register"), AllowAnonymous]
+        public async Task<ActionResult<Users>> Register(UserRegisterDTO user)
+        {
+            var userAlreadyExists = await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+
+            if ( userAlreadyExists != null )
+            {
+                return BadRequest("Usuário já cadastrado.");
+            }
+
+            var result = await _userService.Register(user);
+
+            string token = _securityService.CreateToken(result);
+            var refreshToken = _securityService.GenerateRefreshToken(result);
+            _securityService.SetRefreshToken(result, refreshToken, Response);
+
+            return Ok(token);
         
+        }
+
     }
 }
