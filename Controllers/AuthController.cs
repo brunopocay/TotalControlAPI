@@ -25,8 +25,8 @@ namespace TotalControlAPI.Controllers
         [HttpGet]
         public ActionResult<string> GetMe()
         {
-            var userName = _userService.GetMyName();
-            return Ok(userName);
+            var userData = _userService.GetMyData();
+            return Ok(userData);
         }
 
         [HttpPost("login"), AllowAnonymous]

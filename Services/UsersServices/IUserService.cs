@@ -1,8 +1,10 @@
-﻿namespace TotalControlAPI.Services.UserServices
+﻿using System.Security.Claims;
+
+namespace TotalControlAPI.Services.UserServices
 {
     public interface IUserService
     {
         Task<Users> Register(UserRegisterDTO pessoa);
-        public string GetMyName();
+        public List<string> GetMyData();
     }
 }

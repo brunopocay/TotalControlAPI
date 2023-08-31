@@ -18,13 +18,20 @@ namespace TotalControlAPI.Services.UserServices
             _securityService = security;
         }
 
-        public string GetMyName()
+        public List<string> GetMyData()
         {
-            var result = string.Empty;
-            if ( _contextAccessor != null )
-                result = _contextAccessor.HttpContext!.User.FindFirstValue(ClaimTypes.Name);
-
-            return result!;
+            var result = new List<string>();
+     
+            if ( _contextAccessor !=  null )
+            {             
+                var claims = _contextAccessor.HttpContext!.User.Claims;
+           
+                foreach ( var claim in claims )
+                {
+                    result.Add(claim.Value);
+                }              
+            }        
+            return result;
         }
 
         public async Task<Users> Register(UserRegisterDTO newUser)
