@@ -35,21 +35,28 @@ namespace TotalControlAPI.Controllers
 
             var user = _dataContext.Users.SingleOrDefault(u => u.Email == request.Email);
 
-            if(user is null)
+            try
             {
-                return BadRequest("Usuario não encontrado ou senha incorreta.");
+                if(user is null)
+                {
+                    return BadRequest("Usuario não encontrado ou senha incorreta.");
+                }
+
+                if(!_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash!, user.PasswordSalt!))
+                {                                
+                    return BadRequest("Usuario não encontrado ou senha incorreta.");
+                }
+
+                string token = _securityService.CreateToken(user);
+
+                var refreshToken = _securityService.GenerateRefreshToken(user);
+                _securityService.SetRefreshToken(user, refreshToken, Response);       
+                return Ok(token);
             }
-
-            if(!_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash!, user.PasswordSalt!))
-            {                                
-                return BadRequest("Usuario não encontrado ou senha incorreta.");
+            catch(Exception er)
+            {
+                return StatusCode(500, "Erro interno do servidor");
             }
-
-            string token = _securityService.CreateToken(user);
-
-            var refreshToken = _securityService.GenerateRefreshToken(user);
-            _securityService.SetRefreshToken(user, refreshToken, Response);       
-            return Ok(token);
         }
 
         [HttpPost("refreshtoken"), AllowAnonymous]
@@ -84,18 +91,25 @@ namespace TotalControlAPI.Controllers
         {
             var userAlreadyExists = await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
 
-            if ( userAlreadyExists != null )
+            try
             {
-                return BadRequest("Usuário já cadastrado.");
+                if ( userAlreadyExists != null )
+                {
+                    return BadRequest("Email já cadastrado.");
+                }
+
+                var result = await _userService.Register(user);
+
+                string token = _securityService.CreateToken(result);
+                var refreshToken = _securityService.GenerateRefreshToken(result);
+                _securityService.SetRefreshToken(result, refreshToken, Response);
+
+                return Ok(token);
             }
-
-            var result = await _userService.Register(user);
-
-            string token = _securityService.CreateToken(result);
-            var refreshToken = _securityService.GenerateRefreshToken(result);
-            _securityService.SetRefreshToken(result, refreshToken, Response);
-
-            return Ok(token);
+            catch (Exception er)
+            {
+                return StatusCode(500, "Erro interno de servidor.");
+            }
         
         }
 
