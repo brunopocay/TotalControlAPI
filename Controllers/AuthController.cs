@@ -39,12 +39,12 @@ namespace TotalControlAPI.Controllers
             {
                 if(user is null)
                 {
-                    return BadRequest("Usuario não encontrado ou senha incorreta.");
+                    return NotFound("Usuario não encontrado ou senha incorreta.");
                 }
 
                 if(!_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash!, user.PasswordSalt!))
                 {                                
-                    return BadRequest("Usuario não encontrado ou senha incorreta.");
+                    return NotFound("Usuario não encontrado ou senha incorreta.");
                 }
 
                 string token = _securityService.CreateToken(user);
@@ -65,7 +65,7 @@ namespace TotalControlAPI.Controllers
             var user = _dataContext.Users.SingleOrDefault(u => u.Email == request.Email);
             if(user is null || !_securityService.VerifyPasswordHash(request.Senha, user.PasswordHash!, user.PasswordSalt!))
             {
-                return BadRequest("Usuario não encontrado ou senha incorreta.");
+                return NotFound("Usuario não encontrado ou senha incorreta.");
             }
 
             var refreshToken = Request.Cookies["refreshToken"];
@@ -89,26 +89,22 @@ namespace TotalControlAPI.Controllers
         [HttpPost("register"), AllowAnonymous]
         public async Task<ActionResult<Users>> Register(UserRegisterDTO user)
         {
-            var userAlreadyExists = await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
-
             try
             {
-                if ( userAlreadyExists != null )
-                {
-                    return BadRequest("Email já cadastrado.");
-                }
-
                 var result = await _userService.Register(user);
-
                 string token = _securityService.CreateToken(result);
                 var refreshToken = _securityService.GenerateRefreshToken(result);
                 _securityService.SetRefreshToken(result, refreshToken, Response);
 
                 return Ok(token);
             }
+            catch ( DbUpdateException dbError)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {dbError.Message}");
+            }
             catch (Exception er)
             {
-                return StatusCode(500, "Erro interno de servidor.");
+                return StatusCode(404, er.Message);
             }
         
         }

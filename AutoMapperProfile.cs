@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TotalControlAPI.DTO_s;
 
 namespace TotalControlAPI
 {
@@ -7,6 +8,7 @@ namespace TotalControlAPI
         public AutoMapperProfile() 
         {
             CreateMap<UserRegisterDTO, Users>();
+            CreateMap<nCategoryDTO, Categorias>();
         }
     }
 }

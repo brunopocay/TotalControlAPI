@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using TotalControlAPI.Data;
 
 namespace TotalControlAPI.Services.UserServices
 {
@@ -36,6 +37,14 @@ namespace TotalControlAPI.Services.UserServices
 
         public async Task<Users> Register(UserRegisterDTO newUser)
         {
+
+            var userAlreadyExists = await _context.Users.FirstOrDefaultAsync(u => u.Email == newUser.Email);
+
+            if ( userAlreadyExists != null )
+            {
+                throw new InvalidOperationException("Email já cadastrado.");
+            }
+
             var user = _mapper.Map<Users>(newUser);
 
             _securityService.CreatePasswordHash(user.Senha, out string passwordHash, out string passwordSalt);
