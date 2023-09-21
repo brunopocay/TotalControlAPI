@@ -13,11 +13,10 @@ namespace TotalControlAPI.Controllers
     [Authorize]
     public class CategoryController : ControllerBase
     {
-        private readonly DataContext _dataContext;
+        
         private readonly ICategoryService _category;
-        public CategoryController(DataContext context, ICategoryService category)
-        {
-            _dataContext = context;
+        public CategoryController(ICategoryService category)
+        {           
             _category = category;
         }
 

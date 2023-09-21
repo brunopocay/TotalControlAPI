@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TotalControlAPI.Data;
 
@@ -10,9 +11,11 @@ using TotalControlAPI.Data;
 namespace TotalControlAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230921011413_CorrecaoTabelaControleMensal")]
+    partial class CorrecaoTabelaControleMensal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,8 +60,8 @@ namespace TotalControlAPI.Migrations
                     b.Property<DateTime>("DiaInclusao")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("NomeCategoria")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("NomeCategoriaId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Saldo")
                         .HasColumnType("int");
@@ -73,6 +76,8 @@ namespace TotalControlAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NomeCategoriaId");
 
                     b.HasIndex("UserId");
 
@@ -207,11 +212,17 @@ namespace TotalControlAPI.Migrations
 
             modelBuilder.Entity("TotalControlAPI.Models.ControleMensal", b =>
                 {
+                    b.HasOne("TotalControlAPI.Models.Categorias", "NomeCategoria")
+                        .WithMany()
+                        .HasForeignKey("NomeCategoriaId");
+
                     b.HasOne("TotalControlAPI.Models.Users", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("NomeCategoria");
 
                     b.Navigation("User");
                 });
