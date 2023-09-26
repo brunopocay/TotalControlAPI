@@ -58,7 +58,7 @@ namespace TotalControlAPI.Services.CategoryServices
 
             _context.Categorias.Remove(categoryDelete!);
             await _context.SaveChangesAsync();
-            return categoryDelete!;
+            return categoryDelete;
         }
 
         public async Task<Categorias> UpdateCategoria(nCategoryDTO category, string userEmail)
@@ -73,7 +73,7 @@ namespace TotalControlAPI.Services.CategoryServices
 
             _context.Categorias.Update(updateCategory!);
             await _context.SaveChangesAsync();
-            return updateCategory!;
+            return updateCategory;
         }
     }
 }

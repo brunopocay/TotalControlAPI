@@ -2,6 +2,7 @@
 {
     public class ControleMensalDTO
     {
+        public int Id { get; set; }
         public int CategoriaId { get; set; }
         public required DateTime DiaInclusao { get; set; }
         public int TipoConta { get; set; }

@@ -5,7 +5,7 @@ namespace TotalControlAPI.Data
 {
     public class DataContext : DbContext
     {
-        static readonly string connectionString = "Server=localhost; User ID=root; Password=Pokas@131293; Database=TotalControl;";
+        static readonly string connectionString = "Server=localhost; User ID=root; Password=Pokas@201160137; Database=totalcontrol;";
 
         public DataContext(DbContextOptions<DataContext> options) : base(options){}
 

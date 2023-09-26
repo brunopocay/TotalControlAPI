@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TotalControlAPI.DTO_s;
 using TotalControlAPI.Services.ControleMensalService;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TotalControlAPI.Controllers
 {
@@ -40,6 +41,46 @@ namespace TotalControlAPI.Controllers
                 return NotFound(error.Message);
             }
            
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult<ControleMensal>> DeleteBill(ControleMensalDTO conta)
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
+
+            try
+            {
+                await _control.deleteBill(conta, userEmail);
+                return Ok(conta);
+            }
+            catch (DbUpdateException dbError)
+            {
+                return BadRequest($"Erro interno de servidor: {dbError.Message}");
+            }
+            catch (Exception error)
+            {
+                return NotFound(error.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<ControleMensal>> UpdateBill(ControleMensalDTO conta)
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
+
+            try
+            {
+                await _control.updateBill(conta, userEmail);
+                return Ok(conta);
+            }
+            catch (DbUpdateException dbError)
+            {
+                return BadRequest($"Erro interno de servidor: {dbError.Message}");
+            }
+            catch (Exception error)
+            {
+                return NotFound(error.Message);
+            }
         }
     }
 }

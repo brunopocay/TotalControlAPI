@@ -55,7 +55,7 @@ namespace TotalControlAPI.Controllers
             }
             catch(Exception er)
             {
-                return StatusCode(500, "Erro interno do servidor");
+                return StatusCode(500, $"Erro interno do servidor: {er.Message}");
             }
         }
 
