@@ -7,5 +7,6 @@ namespace TotalControlAPI.Services.ControleMensalService
         Task<List<ControleMensal>> newBill(List<ControleMensalDTO> conta, string email);
         Task<ControleMensal> deleteBill(ControleMensalDTO conta, string email);
         Task<ControleMensal> updateBill(ControleMensalDTO conta, string email);
+        Task<List<ControleMensal>> getBills(string email);
     }
 }

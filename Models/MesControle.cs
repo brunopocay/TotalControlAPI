@@ -2,15 +2,14 @@
 
 namespace TotalControlAPI.Models
 {
-    public class Categorias
+    public class MesControle
     {
         public int Id { get; set; }
         [ForeignKey("Users")]
         public int UserId { get; set; }
         public virtual Users? User { get; set; }
-        public string NomeCategoria { get; set; } = "";
-        public TipoCategoria TipoCategorias { get; set; }
+        public MesControleEnum Mes { get; set; }
+        public string Ano { get; set; } = string.Empty;
         
     }
-
 }

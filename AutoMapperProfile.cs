@@ -10,6 +10,7 @@ namespace TotalControlAPI
             CreateMap<UserRegisterDTO, Users>();
             CreateMap<nCategoryDTO, Categorias>();
             CreateMap<ControleMensalDTO, ControleMensal>();
+            CreateMap<MesControleDTO, MesControle>();
         }
     }
 }

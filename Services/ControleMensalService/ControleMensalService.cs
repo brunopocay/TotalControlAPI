@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TotalControlAPI.DTO_s;
 
 namespace TotalControlAPI.Services.ControleMensalService
@@ -13,6 +14,8 @@ namespace TotalControlAPI.Services.ControleMensalService
             _context = context;
         }
 
+        
+
         public async Task<ControleMensal> deleteBill(ControleMensalDTO conta, string userEmail)
         {
             var deleteBill = _context.ControleMensal.FirstOrDefault(u =>
@@ -23,6 +26,18 @@ namespace TotalControlAPI.Services.ControleMensalService
             _context.ControleMensal.Remove(deleteBill);
             await _context.SaveChangesAsync();
             return deleteBill;
+        }
+
+        public async Task<List<ControleMensal>> getBills(string userEmail)
+        {
+            var user = await _context.ControleMensal.Where(u => u.User!.Email == userEmail ).ToListAsync();
+
+            if(user is null)
+            {
+                throw new InvalidOperationException("Usuário não encontrado");
+            }
+
+            return user;
         }
 
         public async Task<List<ControleMensal>> newBill(List<ControleMensalDTO> conta, string userEmail)

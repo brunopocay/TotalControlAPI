@@ -10,6 +10,7 @@ using Swashbuckle.AspNetCore.Filters;
 using TotalControlAPI.Services.CategoryServices;
 using System.Text.Json.Serialization;
 using TotalControlAPI.Services.ControleMensalService;
+using TotalControlAPI.Services.MesControleService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,7 @@ builder.Services.AddScoped<ISecurityService, SecurityServices>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IControleMensalService, ControleMensalService>();
+builder.Services.AddScoped<IMesControleService, MesControleService>();
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddCors(option => option.AddPolicy(name: "TotalControlOrigins",
     policy =>

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TotalControlAPI.Data;
 using TotalControlAPI.DTO_s;
@@ -18,9 +20,15 @@ namespace TotalControlAPI.Services.CategoryServices
         }
 
 
-        public Task<Categorias> GetCategory()
+        public async Task<List<Categorias>> GetCategory(string userEmail)
         {
-            throw new NotImplementedException();
+            var user = await _context.Categorias.Where(u => u.User!.Email == userEmail).ToListAsync();
+
+            if (user is null)           
+                throw new InvalidOperationException("Usuário não encontrado");
+            
+
+            return user;
         }
 
         public async Task<Categorias> newCategory(nCategoryDTO category, string userEmail)
@@ -75,5 +83,6 @@ namespace TotalControlAPI.Services.CategoryServices
             await _context.SaveChangesAsync();
             return updateCategory;
         }
+       
     }
 }

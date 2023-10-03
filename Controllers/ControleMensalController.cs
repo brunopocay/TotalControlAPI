@@ -22,6 +22,15 @@ namespace TotalControlAPI.Controllers
             _control = control;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<ControleMensal>>> GetBills()
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
+            var result = await _control.getBills(userEmail);
+
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<ActionResult<List<ControleMensal>>> newBill(List<ControleMensalDTO> conta)
         {

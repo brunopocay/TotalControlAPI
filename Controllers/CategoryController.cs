@@ -20,6 +20,15 @@ namespace TotalControlAPI.Controllers
             _category = category;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<Categorias>>> GetCategories()
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
+            var result = await _category.GetCategory(userEmail);
+
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Categorias>> newCategory(nCategoryDTO category)
         {

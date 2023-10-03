@@ -16,7 +16,7 @@ namespace TotalControlAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("TotalControlAPI.Models.Categorias", b =>
@@ -56,6 +56,12 @@ namespace TotalControlAPI.Migrations
 
                     b.Property<DateTime>("DiaInclusao")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Mes")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("MesId")
+                        .HasColumnType("int");
 
                     b.Property<string>("NomeCategoria")
                         .HasColumnType("longtext");
@@ -116,6 +122,29 @@ namespace TotalControlAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Endereco");
+                });
+
+            modelBuilder.Entity("TotalControlAPI.Models.MesControle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ano")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Mes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MesControle");
                 });
 
             modelBuilder.Entity("TotalControlAPI.Models.RefreshToken", b =>
@@ -206,6 +235,17 @@ namespace TotalControlAPI.Migrations
                 });
 
             modelBuilder.Entity("TotalControlAPI.Models.ControleMensal", b =>
+                {
+                    b.HasOne("TotalControlAPI.Models.Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TotalControlAPI.Models.MesControle", b =>
                 {
                     b.HasOne("TotalControlAPI.Models.Users", "User")
                         .WithMany()

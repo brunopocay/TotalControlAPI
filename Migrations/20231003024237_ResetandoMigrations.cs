@@ -7,29 +7,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TotalControlAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class ResetNasMigrationsIniciais : Migration
+    public partial class ResetandoMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Categorias",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    NomeCategoria = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TipoCategoria = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categorias", x => x.Id);
-                })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -60,31 +43,6 @@ namespace TotalControlAPI.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ControleMensal",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    NomeCategoriaId = table.Column<int>(type: "int", nullable: true),
-                    DiaInclusao = table.Column<DateOnly>(type: "date", nullable: false),
-                    Receita = table.Column<int>(type: "int", nullable: false),
-                    Despesas = table.Column<int>(type: "int", nullable: false),
-                    Saldo = table.Column<int>(type: "int", nullable: false),
-                    Descricao = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ControleMensal", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ControleMensal_Categorias_NomeCategoriaId",
-                        column: x => x.NomeCategoriaId,
-                        principalTable: "Categorias",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -99,9 +57,9 @@ namespace TotalControlAPI.Migrations
                     Email = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EnderecoId = table.Column<int>(type: "int", nullable: true),
-                    PasswordHash = table.Column<string>(type: "longtext", nullable: false)
+                    PasswordHash = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PasswordSalt = table.Column<string>(type: "longtext", nullable: false)
+                    PasswordSalt = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RefreshToken = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -116,6 +74,52 @@ namespace TotalControlAPI.Migrations
                         column: x => x.EnderecoId,
                         principalTable: "Endereco",
                         principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Categorias",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    NomeCategoria = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TipoCategorias = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categorias", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Categorias_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "MesControle",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Mes = table.Column<int>(type: "int", nullable: false),
+                    Ano = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MesControle", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MesControle_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -143,10 +147,61 @@ namespace TotalControlAPI.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "ControleMensal",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    CategoriaId = table.Column<int>(type: "int", nullable: false),
+                    NomeCategoria = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MesId = table.Column<int>(type: "int", nullable: false),
+                    DiaInclusao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    TipoConta = table.Column<int>(type: "int", nullable: false),
+                    ValorDaConta = table.Column<int>(type: "int", nullable: false),
+                    Saldo = table.Column<int>(type: "int", nullable: false),
+                    Descricao = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ControleMensal", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ControleMensal_MesControle_MesId",
+                        column: x => x.MesId,
+                        principalTable: "MesControle",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ControleMensal_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
-                name: "IX_ControleMensal_NomeCategoriaId",
+                name: "IX_Categorias_UserId",
+                table: "Categorias",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ControleMensal_MesId",
                 table: "ControleMensal",
-                column: "NomeCategoriaId");
+                column: "MesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ControleMensal_UserId",
+                table: "ControleMensal",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MesControle_UserId",
+                table: "MesControle",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshToken_UserId",
@@ -163,13 +218,16 @@ namespace TotalControlAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Categorias");
+
+            migrationBuilder.DropTable(
                 name: "ControleMensal");
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
-                name: "Categorias");
+                name: "MesControle");
 
             migrationBuilder.DropTable(
                 name: "Users");

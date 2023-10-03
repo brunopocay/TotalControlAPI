@@ -5,25 +5,21 @@
 namespace TotalControlAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class CorrecaoTabelaControleMensalv2 : Migration
+    public partial class CorrigindoCampoMes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_ControleMensal_Categorias_NomeCategoriaId",
+                name: "FK_ControleMensal_MesControle_MesId",
                 table: "ControleMensal");
 
             migrationBuilder.DropIndex(
-                name: "IX_ControleMensal_NomeCategoriaId",
-                table: "ControleMensal");
-
-            migrationBuilder.DropColumn(
-                name: "NomeCategoriaId",
+                name: "IX_ControleMensal_MesId",
                 table: "ControleMensal");
 
             migrationBuilder.AddColumn<string>(
-                name: "NomeCategoria",
+                name: "Mes",
                 table: "ControleMensal",
                 type: "longtext",
                 nullable: true)
@@ -34,26 +30,21 @@ namespace TotalControlAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "NomeCategoria",
+                name: "Mes",
                 table: "ControleMensal");
 
-            migrationBuilder.AddColumn<int>(
-                name: "NomeCategoriaId",
-                table: "ControleMensal",
-                type: "int",
-                nullable: true);
-
             migrationBuilder.CreateIndex(
-                name: "IX_ControleMensal_NomeCategoriaId",
+                name: "IX_ControleMensal_MesId",
                 table: "ControleMensal",
-                column: "NomeCategoriaId");
+                column: "MesId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ControleMensal_Categorias_NomeCategoriaId",
+                name: "FK_ControleMensal_MesControle_MesId",
                 table: "ControleMensal",
-                column: "NomeCategoriaId",
-                principalTable: "Categorias",
-                principalColumn: "Id");
+                column: "MesId",
+                principalTable: "MesControle",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }
