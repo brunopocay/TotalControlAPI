@@ -18,6 +18,15 @@ namespace TotalControlAPI.Controllers
             _mesControleService = mes;        
         }
 
+        [HttpGet]
+        public async Task<ActionResult<MesControle>> GetMonth()
+        {
+            var user = User.FindFirst(ClaimTypes.Email)!.Value;
+            var result = await _mesControleService.GetMesControle(user);
+
+            return Ok(result);      
+        }
+
         [HttpPost]
         public async Task <ActionResult<MesControle>> newMonth(MesControleDTO mes)
         {

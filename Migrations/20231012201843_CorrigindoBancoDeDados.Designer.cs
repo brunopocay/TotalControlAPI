@@ -11,8 +11,8 @@ using TotalControlAPI.Data;
 namespace TotalControlAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231003024508_CorrigindoCampoMes")]
-    partial class CorrigindoCampoMes
+    [Migration("20231012201843_CorrigindoBancoDeDados")]
+    partial class CorrigindoBancoDeDados
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -137,8 +137,9 @@ namespace TotalControlAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Mes")
-                        .HasColumnType("int");
+                    b.Property<string>("Mes")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
