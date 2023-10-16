@@ -134,6 +134,9 @@ namespace TotalControlAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("ControleAtivo")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Mes")
                         .IsRequired()
                         .HasColumnType("longtext");

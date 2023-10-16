@@ -30,10 +30,27 @@ namespace TotalControlAPI.Controllers
         [HttpPost]
         public async Task <ActionResult<MesControle>> newMonth(MesControleDTO mes)
         {
+            try
+            {
+                var user = User.FindFirst(ClaimTypes.Email)!.Value;
+
+                var result = await _mesControleService.NewMonth(mes, user);
+                return Ok(result);
+            }
+            catch(InvalidOperationException error)
+            {
+                return NotFound(error.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<MesControle>> updateMonth(MesControle mes)
+        {
             var user = User.FindFirst(ClaimTypes.Email)!.Value;
 
-            var result = await _mesControleService.NewMonth(mes, user);
+            var result = await _mesControleService.UpdateMonth(mes, user);
             return Ok(result);
         }
+        
     }
 }

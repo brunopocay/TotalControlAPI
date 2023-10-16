@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TotalControlAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class CorrigindoBancoDeDados : Migration
+    public partial class InitialDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -142,7 +142,8 @@ namespace TotalControlAPI.Migrations
                     Mes = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Ano = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ControleAtivo = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {

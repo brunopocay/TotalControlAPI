@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TotalControlAPI.DTO_s;
 
@@ -15,7 +16,10 @@ namespace TotalControlAPI.Services.MesControleService
         }
         public Task<List<MesControle>> GetMesControle(string userEmail)
         {
-            var user = _context.MesControle.Where(mes => mes.User!.Email == userEmail).ToListAsync();
+            var user = _context.MesControle.Where(mes => 
+                mes.User!.Email == userEmail &&
+                mes.ControleAtivo == true
+            ).ToListAsync();
 
             if (user is null)
                 throw new InvalidOperationException("Usuário não encontrado");
@@ -34,7 +38,7 @@ namespace TotalControlAPI.Services.MesControleService
             );
             
             if(MonthAndYearAlreadyExists != null)
-                throw new InvalidOperationException("Essa lista de controle mensal já existe! Verifique na lista novamente.");
+                throw new InvalidOperationException("Essa controle mensal já existe ou está inativa!");
 
             var newMonth = new MesControle
             {
@@ -48,6 +52,19 @@ namespace TotalControlAPI.Services.MesControleService
             await _context.SaveChangesAsync();
             return result;
 
+        }
+
+        public async Task<MesControle> UpdateMonth(MesControle mes, string userEmail)
+        {
+            var userMonth = _context.MesControle.FirstOrDefault(u =>
+            u.User!.Email == userEmail &&
+            u.Id == mes.Id) ?? throw new InvalidOperationException("Mês não encontrado");
+
+            userMonth.ControleAtivo = false;
+
+            _context.MesControle.Update(userMonth);
+            await _context.SaveChangesAsync();
+            return userMonth;
         }
     }
 }

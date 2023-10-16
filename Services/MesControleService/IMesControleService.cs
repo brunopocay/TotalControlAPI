@@ -6,5 +6,6 @@ namespace TotalControlAPI.Services.MesControleService
     {
         Task<List<MesControle>> GetMesControle(string userEmail);
         Task<MesControle> NewMonth(MesControleDTO mes, string userEmail);
+        Task<MesControle> UpdateMonth(MesControle mes, string userEmail);
     }
 }

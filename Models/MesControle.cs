@@ -10,6 +10,7 @@ namespace TotalControlAPI.Models
         public virtual Users? User { get; set; }
         public string Mes { get; set; } = string.Empty;
         public string Ano { get; set; } = string.Empty;
+        public bool ControleAtivo { get; set; } = true;
 
         public enum MesControleEnum
         {      

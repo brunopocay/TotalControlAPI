@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TotalControlAPI.Models;
 
 namespace TotalControlAPI.Data
@@ -7,8 +8,11 @@ namespace TotalControlAPI.Data
     {
         static readonly string connectionString = "Server=localhost; User ID=root; Password=Pokas@201160137; Database=totalcontrol;";
 
-        public DataContext(DbContextOptions<DataContext> options) : base(options){}
-
+        public DataContext(DbContextOptions<DataContext> options) : base(options) 
+        {
+                    
+        }
+      
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
