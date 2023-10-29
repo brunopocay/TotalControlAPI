@@ -16,7 +16,7 @@ namespace TotalControlAPI.Services.ControleMensalService
 
         
 
-        public async Task<ControleMensal> deleteBill(ControleMensalDTO conta, string userEmail)
+        public async Task<ControleMensal> DeleteBill(ControleMensalDTO conta, string userEmail)
         {
             var deleteBill = _context.ControleMensal.FirstOrDefault(u =>
                 u.User!.Email == userEmail &&
@@ -28,7 +28,7 @@ namespace TotalControlAPI.Services.ControleMensalService
             return deleteBill;
         }
 
-        public async Task<List<ControleMensal>> getBills(string userEmail)
+        public async Task<List<ControleMensal>> GetBills(string userEmail)
         {
             var user = await _context.ControleMensal.Where(u => u.User!.Email == userEmail ).ToListAsync();
 
@@ -40,40 +40,38 @@ namespace TotalControlAPI.Services.ControleMensalService
             return user;
         }
 
-        public async Task<List<ControleMensal>> newBill(List<ControleMensalDTO> conta, string userEmail)
+        public async Task<ControleMensal> NewBill(ControleMensalDTO conta, string userEmail)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
+            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);    
+            var mescontrole = _context.MesControle.FirstOrDefault(mes => 
+                mes.Id == conta.MesId
+            );
+            var categoria = _context.Categorias.FirstOrDefault(c =>
+                c.Id == conta.CategoriaId
+            );
 
-            var result = new List<ControleMensal>();
-            foreach ( var contas in conta )
+            var newBilling = _mapper.Map<ControleMensal>(conta);
+            if(categoria != null )
             {
-
-                var categoria = _context.Categorias.FirstOrDefault(c =>
-                    c.Id == contas.CategoriaId
-                );
-
-                if(categoria != null )
-                {
-                    var newBilling = _mapper.Map<ControleMensal>(contas);
-                    newBilling.UserId = user!.Id;
-                    newBilling.CategoriaId = contas.CategoriaId;
-                    newBilling.NomeCategoria = categoria!.NomeCategoria;
-                    newBilling.DiaInclusao = DateTime.Now;
-                    newBilling.TipoConta = contas.TipoConta;
-                    newBilling.ValorDaConta = contas.ValorDaConta;
-                    newBilling.Descricao = contas.Descricao;
-
-                    result.Add(newBilling);
-                }
+                newBilling.UserId = user!.Id;
+                newBilling.CategoriaId = conta.CategoriaId;
+                newBilling.NomeCategoria = categoria!.NomeCategoria;
+                newBilling.DiaInclusao = conta.DiaInclusao;
+                newBilling.TipoConta = categoria.TipoCategorias;
+                newBilling.MesId = conta!.MesId;
+                newBilling.Mes = mescontrole!.Mes;
+                newBilling.ValorDaConta = conta.ValorDaConta;
+                newBilling.Descricao = conta.Descricao;        
             }
-         
-            _context.ControleMensal.AddRange(result);
+            
+        
+            _context.ControleMensal.Add(newBilling);
             await _context.SaveChangesAsync();
 
-            return result;
+            return newBilling;
         }
 
-        public async Task<ControleMensal> updateBill(ControleMensalDTO conta, string userEmail)
+        public async Task<ControleMensal> UpdateBill(ControleMensalDTO conta, string userEmail)
         {
             var updateBill = _context.ControleMensal.FirstOrDefault(u =>
                 u.User!.Email == userEmail &&
@@ -81,7 +79,7 @@ namespace TotalControlAPI.Services.ControleMensalService
             ) ?? throw new InvalidOperationException("Conta não encontrada.");
 
             updateBill.Descricao = conta.Descricao;
-            updateBill.DiaInclusao = DateTime.Now;
+            updateBill.DiaInclusao = conta.DiaInclusao;
             updateBill.ValorDaConta = conta.ValorDaConta;
             updateBill.TipoConta = conta.TipoConta;
             updateBill.CategoriaId = conta.CategoriaId;

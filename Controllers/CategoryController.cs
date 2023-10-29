@@ -30,13 +30,13 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Categorias>> newCategory(nCategoryDTO category)
+        public async Task<ActionResult<Categorias>> NewCategory(nCategoryDTO category)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
 
             try
             {
-                var result = await _category.newCategory(category, userEmail!);
+                var result = await _category.NewCategory(category, userEmail!);
                 return Ok(result);
             }
             catch ( DbUpdateException dbError )

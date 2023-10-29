@@ -6,7 +6,7 @@ namespace TotalControlAPI.Services.CategoryServices
     {
         Task<Categorias> UpdateCategoria(nCategoryDTO category, string userEmail);
         Task<Categorias> DeleteCategory(nCategoryDTO category, string userEmail);
-        Task<Categorias> newCategory(nCategoryDTO category, string userEmail);
+        Task<Categorias> NewCategory(nCategoryDTO category, string userEmail);
         Task<List<Categorias>> GetCategory(string userEmail);
     }
 }

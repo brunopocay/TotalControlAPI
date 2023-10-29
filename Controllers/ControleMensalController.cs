@@ -26,19 +26,19 @@ namespace TotalControlAPI.Controllers
         public async Task<ActionResult<List<ControleMensal>>> GetBills()
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
-            var result = await _control.getBills(userEmail);
+            var result = await _control.GetBills(userEmail);
 
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<ControleMensal>>> newBill(List<ControleMensalDTO> conta)
+        public async Task<ActionResult<ControleMensal>> NewBill(ControleMensalDTO conta)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
 
             try
             {
-                var result = await _control.newBill(conta, userEmail);
+                var result = await _control.NewBill(conta, userEmail);
                 return Ok(result);
             }
             catch (DbUpdateException dbError)
@@ -59,7 +59,7 @@ namespace TotalControlAPI.Controllers
 
             try
             {
-                await _control.deleteBill(conta, userEmail);
+                await _control.DeleteBill(conta, userEmail);
                 return Ok(conta);
             }
             catch (DbUpdateException dbError)
@@ -79,7 +79,7 @@ namespace TotalControlAPI.Controllers
 
             try
             {
-                await _control.updateBill(conta, userEmail);
+                await _control.UpdateBill(conta, userEmail);
                 return Ok(conta);
             }
             catch (DbUpdateException dbError)

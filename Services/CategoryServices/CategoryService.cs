@@ -31,7 +31,7 @@ namespace TotalControlAPI.Services.CategoryServices
             return user;
         }
 
-        public async Task<Categorias> newCategory(nCategoryDTO category, string userEmail)
+        public async Task<Categorias> NewCategory(nCategoryDTO category, string userEmail)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
 
