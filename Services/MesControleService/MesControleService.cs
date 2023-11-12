@@ -27,28 +27,21 @@ namespace TotalControlAPI.Services.MesControleService
             return user;
         }
 
-        public async Task<MesControle> NewMonth(MesControleDTO mes, string userEmail)
+        public async Task<MesControle> NewMonth(MesControleDTO novoMes, string userEmail)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
 
-            var MonthAndYearAlreadyExists = _context.MesControle.FirstOrDefault(m =>
-                m.User!.Email == userEmail &&
-                m.Mes == mes.Mes &&
-                m.Ano == mes.Ano
+            var MonthAndYearAlreadyExists = _context.MesControle.FirstOrDefault(mesSelecionado =>
+                mesSelecionado.User!.Email == userEmail &&
+                mesSelecionado.Mes == novoMes.Mes &&
+                mesSelecionado.Ano == novoMes.Ano
             );
             
             if(MonthAndYearAlreadyExists != null)
                 throw new InvalidOperationException("Essa controle mensal já existe ou está inativa!");
 
-            var newMonth = new MesControle
-            {
-                UserId = user!.Id,
-                Mes = mes.Mes,
-                Ano = mes.Ano,
-            };
-
-            var result = _mapper.Map<MesControle>(newMonth);
-            _context.MesControle.Add(newMonth);
+            var result = _mapper.Map<MesControle>(novoMes);
+            _context.MesControle.Add(result);
             await _context.SaveChangesAsync();
             return result;
 

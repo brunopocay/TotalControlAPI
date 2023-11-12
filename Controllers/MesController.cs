@@ -28,7 +28,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPost]
-        public async Task <ActionResult<MesControle>> newMonth(MesControleDTO mes)
+        public async Task <ActionResult<MesControle>> NewMonth(MesControleDTO mes)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<MesControle>> updateMonth(MesControle mes)
+        public async Task<ActionResult<MesControle>> UpdateMonth(MesControle mes)
         {
             var user = User.FindFirst(ClaimTypes.Email)!.Value;
 

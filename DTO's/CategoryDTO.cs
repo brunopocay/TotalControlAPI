@@ -1,6 +1,6 @@
 ﻿namespace TotalControlAPI.DTO_s
 {
-    public class nCategoryDTO
+    public class CategoryDTO
     {
         public int IdCategoria { get; set; }
         public required string NomeCategoria { get; set; } = string.Empty;

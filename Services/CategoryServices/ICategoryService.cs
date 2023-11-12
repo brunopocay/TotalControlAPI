@@ -4,9 +4,9 @@ namespace TotalControlAPI.Services.CategoryServices
 {
     public interface ICategoryService
     {
-        Task<Categorias> UpdateCategoria(nCategoryDTO category, string userEmail);
-        Task<Categorias> DeleteCategory(nCategoryDTO category, string userEmail);
-        Task<Categorias> NewCategory(nCategoryDTO category, string userEmail);
+        Task<Categorias> UpdateCategoria(CategoryDTO category, string userEmail);
+        Task<Categorias> DeleteCategory(CategoryDTO category, string userEmail);
+        Task<Categorias> NewCategory(CategoryDTO category, string userEmail);
         Task<List<Categorias>> GetCategory(string userEmail);
     }
 }

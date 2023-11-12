@@ -30,7 +30,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Categorias>> NewCategory(nCategoryDTO category)
+        public async Task<ActionResult<Categorias>> NewCategory(CategoryDTO category)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
 
@@ -50,7 +50,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<Categorias>> DeleteCategory(nCategoryDTO category)
+        public async Task<ActionResult<Categorias>> DeleteCategory(CategoryDTO category)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
 
@@ -70,7 +70,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Categorias>> UpdateCategory(nCategoryDTO category)
+        public async Task<ActionResult<Categorias>> UpdateCategory(CategoryDTO category)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
 

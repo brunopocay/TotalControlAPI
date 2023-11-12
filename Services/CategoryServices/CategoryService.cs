@@ -19,7 +19,6 @@ namespace TotalControlAPI.Services.CategoryServices
             _mapper = mapper;
         }
 
-
         public async Task<List<Categorias>> GetCategory(string userEmail)
         {
             var user = await _context.Categorias.Where(u => u.User!.Email == userEmail).ToListAsync();
@@ -31,37 +30,30 @@ namespace TotalControlAPI.Services.CategoryServices
             return user;
         }
 
-        public async Task<Categorias> NewCategory(nCategoryDTO category, string userEmail)
+        public async Task<Categorias> NewCategory(CategoryDTO category, string userEmail)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
 
-            var categoryAlreadyExists = _context.Categorias.FirstOrDefault(c =>
-                c.User!.Email == userEmail &&
-                c.NomeCategoria == category.NomeCategoria
+            var categoryAlreadyExists = _context.Categorias.FirstOrDefault(categoria =>
+                categoria.User!.Email == userEmail &&
+                categoria.NomeCategoria == category.NomeCategoria
             );
 
             if ( categoryAlreadyExists != null )            
                 throw new InvalidOperationException("Essa categoria já esta sendo utilizada. Cadastre uma categoria com nome diferente.");
-            
-            var newCategory = new Categorias
-            {
-                UserId = user!.Id,
-                NomeCategoria = category.NomeCategoria,
-                TipoCategorias = category.TipoCategorias
-            };
-         
-            var result = _mapper.Map<Categorias>(newCategory);
-            _context.Categorias.Add(newCategory);
+   
+            var result = _mapper.Map<Categorias>(category);
+            _context.Categorias.Add(result);
             await _context.SaveChangesAsync();
             return result;
         }
 
-        public async Task<Categorias> DeleteCategory(nCategoryDTO category, string userEmail)
+        public async Task<Categorias> DeleteCategory(CategoryDTO category, string userEmail)
         {
 
-            var categoryDelete = _context.Categorias.FirstOrDefault(cd =>
-                cd.User!.Email == userEmail &&
-                cd.NomeCategoria == category.NomeCategoria
+            var categoryDelete = _context.Categorias.FirstOrDefault(categoria =>
+                categoria.User!.Email == userEmail &&
+                categoria.NomeCategoria == category.NomeCategoria
             ) ?? throw new InvalidOperationException("Essa categoria não existe ou já foi apagada");
 
             _context.Categorias.Remove(categoryDelete!);
@@ -69,19 +61,17 @@ namespace TotalControlAPI.Services.CategoryServices
             return categoryDelete;
         }
 
-        public async Task<Categorias> UpdateCategoria(nCategoryDTO category, string userEmail)
+        public async Task<Categorias> UpdateCategoria(CategoryDTO category, string userEmail)
         {
-            var updateCategory = _context.Categorias.FirstOrDefault(cd => 
-                cd.User!.Email == userEmail &&  
-                cd.Id == category.IdCategoria
+            var updateCategory = _context.Categorias.FirstOrDefault(categoria =>
+                categoria.User!.Email == userEmail &&
+                categoria.Id == category.IdCategoria
             ) ?? throw new InvalidOperationException("Categoria não encontrada.");
 
-            updateCategory.NomeCategoria = category.NomeCategoria;
-            updateCategory.TipoCategorias = category.TipoCategorias;
-
-            _context.Categorias.Update(updateCategory!);
+            var result = _mapper.Map<Categorias>(category);
+            _context.Categorias.Update(result);
             await _context.SaveChangesAsync();
-            return updateCategory;
+            return result;
         }
        
     }

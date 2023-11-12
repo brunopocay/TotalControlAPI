@@ -14,8 +14,6 @@ namespace TotalControlAPI.Services.ControleMensalService
             _context = context;
         }
 
-        
-
         public async Task<ControleMensal> DeleteBill(ControleMensalDTO conta, string userEmail)
         {
             var deleteBill = _context.ControleMensal.FirstOrDefault(u =>
@@ -42,29 +40,31 @@ namespace TotalControlAPI.Services.ControleMensalService
 
         public async Task<ControleMensal> NewBill(ControleMensalDTO conta, string userEmail)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);    
-            var mescontrole = _context.MesControle.FirstOrDefault(mes => 
-                mes.Id == conta.MesId
-            );
-            var categoria = _context.Categorias.FirstOrDefault(c =>
-                c.Id == conta.CategoriaId
-            );
+
+            var userInformations = _context.ControleMensal.
+              Include(user => user.User).
+              Include(mescontrole => mescontrole.MesControle).
+              Include(categoria => categoria.Categorias).
+              FirstOrDefault(user =>
+                user.User!.Email == userEmail &&
+                user.MesId == conta.MesId && 
+                user.CategoriaId == conta.CategoriaId
+              );
 
             var newBilling = _mapper.Map<ControleMensal>(conta);
-            if(categoria != null )
+            if(userInformations != null )
             {
-                newBilling.UserId = user!.Id;
+                newBilling.UserId = userInformations!.Id;
                 newBilling.CategoriaId = conta.CategoriaId;
-                newBilling.NomeCategoria = categoria!.NomeCategoria;
+                newBilling.NomeCategoria = userInformations.NomeCategoria;
                 newBilling.DiaInclusao = conta.DiaInclusao;
-                newBilling.TipoConta = categoria.TipoCategorias;
+                newBilling.TipoConta = userInformations.Categorias!.TipoCategorias;
                 newBilling.MesId = conta!.MesId;
-                newBilling.Mes = mescontrole!.Mes;
+                newBilling.Mes = userInformations!.Mes;
                 newBilling.ValorDaConta = conta.ValorDaConta;
                 newBilling.Descricao = conta.Descricao;        
             }
-            
-        
+                 
             _context.ControleMensal.Add(newBilling);
             await _context.SaveChangesAsync();
 
@@ -78,12 +78,8 @@ namespace TotalControlAPI.Services.ControleMensalService
                 u.Id == conta.Id
             ) ?? throw new InvalidOperationException("Conta não encontrada.");
 
-            updateBill.Descricao = conta.Descricao;
-            updateBill.DiaInclusao = conta.DiaInclusao;
-            updateBill.ValorDaConta = conta.ValorDaConta;
-            updateBill.TipoConta = conta.TipoConta;
-            updateBill.CategoriaId = conta.CategoriaId;
 
+            updateBill = _mapper.Map<ControleMensal>(conta);
             _context.ControleMensal.Update(updateBill);
             await _context.SaveChangesAsync();
 

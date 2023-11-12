@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using TotalControlAPI.DTO_s;
 
-namespace TotalControlAPI
+namespace TotalControlAPI.Profiles
 {
     public class AutoMapperProfile : Profile
     {
-        public AutoMapperProfile() 
+        public AutoMapperProfile()
         {
             CreateMap<UserRegisterDTO, Users>();
-            CreateMap<nCategoryDTO, Categorias>();
+            CreateMap<CategoryDTO, Categorias>();
             CreateMap<ControleMensalDTO, ControleMensal>();
             CreateMap<MesControleDTO, MesControle>();
         }
