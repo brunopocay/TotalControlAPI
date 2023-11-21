@@ -10,31 +10,31 @@ namespace TotalControlAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class MesController : ControllerBase
+    public class MesReferenciaController : ControllerBase
     {
-        private readonly IMesControleService _mesControleService;
-        public MesController(IMesControleService mes)
+        private readonly IMesReferenciaService _mesReferenciaService;
+        public MesReferenciaController(IMesReferenciaService mesReferencia)
         {
-            _mesControleService = mes;        
+			_mesReferenciaService = mesReferencia;        
         }
 
         [HttpGet]
-        public async Task<ActionResult<MesControle>> GetMonth()
+        public async Task<ActionResult<ReadMesReferenciaDTO>> GetMonth()
         {
             var user = User.FindFirst(ClaimTypes.Email)!.Value;
-            var result = await _mesControleService.GetMesControle(user);
+            var result = await _mesReferenciaService.GetMonthReference(user);
 
             return Ok(result);      
         }
 
         [HttpPost]
-        public async Task <ActionResult<MesControle>> NewMonth(MesControleDTO mes)
+        public async Task<ActionResult<ReadMesReferenciaDTO>> NewMonth(CreateMesReferenciaDTO mes)
         {
             try
             {
                 var user = User.FindFirst(ClaimTypes.Email)!.Value;
 
-                var result = await _mesControleService.NewMonth(mes, user);
+                var result = await _mesReferenciaService.NewMonthReference(mes, user);
                 return Ok(result);
             }
             catch(InvalidOperationException error)
@@ -44,11 +44,11 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<MesControle>> UpdateMonth(MesControle mes)
+        public async Task<ActionResult<ReadMesReferenciaDTO>> UpdateMonth(UpdateMesReferenciaDTO mes)
         {
             var user = User.FindFirst(ClaimTypes.Email)!.Value;
 
-            var result = await _mesControleService.UpdateMonth(mes, user);
+			var result = await _mesReferenciaService.UpdateMonthReference(mes, user);
             return Ok(result);
         }
         

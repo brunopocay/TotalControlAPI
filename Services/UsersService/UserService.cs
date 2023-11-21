@@ -10,8 +10,8 @@ namespace TotalControlAPI.Services.UserServices
         private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly ISecurityService _securityService;
-        public UserService(IMapper mapper,DataContext context, IHttpContextAccessor contextAccessor, ISecurityService security)
+        private readonly ISecurityServices _securityService;
+        public UserService(IMapper mapper,DataContext context, IHttpContextAccessor contextAccessor, ISecurityServices security)
         {
             _context = context;
             _mapper = mapper; 

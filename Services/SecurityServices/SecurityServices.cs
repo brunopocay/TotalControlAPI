@@ -8,7 +8,7 @@ using System.Text;
 
 namespace TotalControlAPI.Services.SecurityServices
 {
-    public class SecurityServices : Controller, ISecurityService
+    public class SecurityServices : Controller, ISecurityServices
     {
         Users user = new Users();
         private readonly IConfiguration _configuration;

@@ -8,9 +8,7 @@ namespace TotalControlAPI.Profiles
         public AutoMapperProfile()
         {
             CreateMap<UserRegisterDTO, Users>();
-            CreateMap<CategoryDTO, Categorias>();
-            CreateMap<ControleMensalDTO, ControleMensal>();
-            CreateMap<MesControleDTO, MesControle>();
+            CreateMap<RegistroFinanceiroMensalDTO, RegistroFinanceiroMensal>();
         }
     }
 }

@@ -2,13 +2,12 @@
 
 namespace TotalControlAPI.Models
 {
-    public class MesControle
-    {
+    public class MesReferencia
+	{
         public int Id { get; set; }
-        [ForeignKey("Users")]
         public int UserId { get; set; }
         public virtual Users? User { get; set; }
-        public string Mes { get; set; } = string.Empty;
+        public string NomeMes { get; set; } = string.Empty;
         public string Ano { get; set; } = string.Empty;
         public bool ControleAtivo { get; set; } = true;
 

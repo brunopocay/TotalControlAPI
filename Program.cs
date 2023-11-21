@@ -49,11 +49,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     }
 );
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-builder.Services.AddScoped<ISecurityService, SecurityServices>();
+builder.Services.AddScoped<ISecurityServices, SecurityServices>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IControleMensalService, ControleMensalService>();
-builder.Services.AddScoped<IMesControleService, MesControleService>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<IRegistroFinanceiroMensalService, RegistroFinanceiroMensalService>();
+builder.Services.AddScoped<IMesReferenciaService, MesReferenciaService>();
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddCors(option => option.AddPolicy(name: "TotalControlOrigins",
     policy =>

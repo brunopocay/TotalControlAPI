@@ -18,12 +18,18 @@ namespace TotalControlAPI.Data
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
-        public DbSet<Users> Users => Set<Users>();
+
+		public DbSet<Users> Users => Set<Users>();
         public DbSet<Endereco> Endereco => Set<Endereco>();
-        public DbSet<ControleMensal> ControleMensal => Set<ControleMensal>();
+        public DbSet<RegistroFinanceiroMensal> RegistroFinanceiroMensal => Set<RegistroFinanceiroMensal>();
         public DbSet<Categorias> Categorias => Set<Categorias>();
         public DbSet<RefreshToken> RefreshToken => Set<RefreshToken>();
-        public DbSet<MesControle> MesControle => Set<MesControle>();
-       
-    }
+        public DbSet<MesReferencia> MesReferencia => Set<MesReferencia>();
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+            modelBuilder.Entity<Users>().HasOne(endereco => endereco.Endereco).WithOne(user => user.Users).HasForeignKey<Endereco>(end => end.UserId);
+		}
+
+	}
 }

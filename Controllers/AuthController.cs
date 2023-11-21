@@ -11,11 +11,11 @@ namespace TotalControlAPI.Controllers
     [Authorize]
     public class AuthController : ControllerBase
     {
-        private ISecurityService _securityService;
+        private ISecurityServices _securityService;
         private readonly DataContext _dataContext;
         private readonly IUserService _userService;
         
-        public AuthController(DataContext context, ISecurityService securityService, IUserService userService)
+        public AuthController(DataContext context, ISecurityServices securityService, IUserService userService)
         {
             _dataContext = context;     
             _securityService = securityService;

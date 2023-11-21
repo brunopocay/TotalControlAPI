@@ -11,17 +11,17 @@ namespace TotalControlAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CategoryController : ControllerBase
+    public class CategoriaController : ControllerBase
     {
         
-        private readonly ICategoryService _category;
-        public CategoryController(ICategoryService category)
+        private readonly ICategoriaService _category;
+        public CategoriaController(ICategoriaService category)
         {           
             _category = category;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Categorias>>> GetCategories()
+        public async Task<ActionResult<List<ReadCategoriaDTO>>> GetCategories()
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
             var result = await _category.GetCategory(userEmail);
@@ -30,7 +30,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Categorias>> NewCategory(CategoryDTO category)
+        public async Task<ActionResult<CreateCategoriaDTO>> NewCategory(CreateCategoriaDTO category)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
 
@@ -45,19 +45,19 @@ namespace TotalControlAPI.Controllers
             }
             catch (Exception error)
             {
-                return StatusCode(404, error.Message);
+                return NotFound(error.Message);
             }
         }
 
         [HttpDelete]
-        public async Task<ActionResult<Categorias>> DeleteCategory(CategoryDTO category)
+        public async Task<IActionResult> DeleteCategory(DeleteCategoriaDTO category)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
 
             try
             {               
                 var result = await _category.DeleteCategory(category, userEmail!);
-                return Ok(result);
+                return Ok(new { message = "Excluido com sucesso" });
             }
             catch ( DbUpdateException dbError )
             {            
@@ -65,12 +65,12 @@ namespace TotalControlAPI.Controllers
             }
             catch ( Exception error )
             {            
-                return StatusCode(404, error.Message);
+                return NotFound(error.Message);
             }
         }
 
         [HttpPut]
-        public async Task<ActionResult<Categorias>> UpdateCategory(CategoryDTO category)
+        public async Task<ActionResult<UpdateCategoriaDTO>> UpdateCategory(UpdateCategoriaDTO category)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
 
@@ -81,11 +81,11 @@ namespace TotalControlAPI.Controllers
             }
             catch ( DbUpdateException dbError )
             {
-                return StatusCode(500, $"Erro interno do banco de dados : {dbError.Message}");
+                return StatusCode(500, $"Erro interno do banco de dados : {dbError}" );
             }
             catch (Exception error)
             {
-                return StatusCode(404, error.Message);
+                return NotFound(error.Message);
             }
         }
 

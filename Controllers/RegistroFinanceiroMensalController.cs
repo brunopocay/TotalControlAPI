@@ -13,32 +13,32 @@ namespace TotalControlAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ControleMensalController : ControllerBase
+    public class RegistroFinanceiroMensalController : ControllerBase
     {
-        private readonly IControleMensalService _control;
+        private readonly IRegistroFinanceiroMensalService _registroMensal;
 
-        public ControleMensalController(IControleMensalService control)
+        public RegistroFinanceiroMensalController(IRegistroFinanceiroMensalService control)
         {
-            _control = control;
+			_registroMensal = control;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ControleMensal>>> GetBills()
+        public async Task<ActionResult<List<RegistroFinanceiroMensal>>> GetBills()
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
-            var result = await _control.GetBills(userEmail);
+            var result = await _registroMensal.GetBills(userEmail);
 
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ControleMensal>> NewBill(ControleMensalDTO conta)
+        public async Task<ActionResult<RegistroFinanceiroMensal>> NewBill(RegistroFinanceiroMensalDTO conta)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
 
             try
             {
-                var result = await _control.NewBill(conta, userEmail);
+                var result = await _registroMensal.NewBill(conta, userEmail);
                 return Ok(result);
             }
             catch (DbUpdateException dbError)
@@ -53,13 +53,13 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<ControleMensal>> DeleteBill(ControleMensalDTO conta)
+        public async Task<ActionResult<RegistroFinanceiroMensal>> DeleteBill(RegistroFinanceiroMensalDTO conta)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
 
             try
             {
-                await _control.DeleteBill(conta, userEmail);
+                await _registroMensal.DeleteBill(conta, userEmail);
                 return Ok(conta);
             }
             catch (DbUpdateException dbError)
@@ -73,13 +73,13 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<ControleMensal>> UpdateBill(ControleMensalDTO conta)
+        public async Task<ActionResult<RegistroFinanceiroMensal>> UpdateBill(RegistroFinanceiroMensalDTO conta)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
 
             try
             {
-                await _control.UpdateBill(conta, userEmail);
+                await _registroMensal.UpdateBill(conta, userEmail);
                 return Ok(conta);
             }
             catch (DbUpdateException dbError)

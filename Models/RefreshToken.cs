@@ -6,7 +6,6 @@ namespace TotalControlAPI.Models
     public class RefreshToken
     {       
         public int Id { get; set; }
-        [ForeignKey("Users")]
         public int UserId { get; set; }
         public virtual Users? User { get; set; }
         public string Token { get; set; }

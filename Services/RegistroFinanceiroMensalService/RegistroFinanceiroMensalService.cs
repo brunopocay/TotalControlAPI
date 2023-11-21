@@ -4,31 +4,32 @@ using TotalControlAPI.DTO_s;
 
 namespace TotalControlAPI.Services.ControleMensalService
 {
-    public class ControleMensalService : IControleMensalService
+    public class RegistroFinanceiroMensalService : IRegistroFinanceiroMensalService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        public ControleMensalService(DataContext context, IMapper mapper)
+        public RegistroFinanceiroMensalService(DataContext context, IMapper mapper)
         {
             _mapper = mapper;
             _context = context;
         }
 
-        public async Task<ControleMensal> DeleteBill(ControleMensalDTO conta, string userEmail)
+        public async Task<RegistroFinanceiroMensal> DeleteBill(RegistroFinanceiroMensalDTO conta, string userEmail)
         {
-            var deleteBill = _context.ControleMensal.FirstOrDefault(u =>
+            var deleteBill = _context.RegistroFinanceiroMensal.FirstOrDefault(u =>
                 u.User!.Email == userEmail &&
                 u.Id == conta.Id
             ) ?? throw new InvalidOperationException("Esta conta não existe ou já foi apagada.");
 
-            _context.ControleMensal.Remove(deleteBill);
+            _context.RegistroFinanceiroMensal.Remove(deleteBill);
             await _context.SaveChangesAsync();
             return deleteBill;
         }
 
-        public async Task<List<ControleMensal>> GetBills(string userEmail)
+        public async Task<List<RegistroFinanceiroMensal>> GetBills(string userEmail)
         {
-            var user = await _context.ControleMensal.Where(u => u.User!.Email == userEmail ).ToListAsync();
+            //TODO : Fzer um DTO para retornar objeto de leitura somente com as informações necessarias.
+            var user = await _context.RegistroFinanceiroMensal.Where(u => u.User!.Email == userEmail ).ToListAsync();
 
             if(user is null)
             {
@@ -38,12 +39,12 @@ namespace TotalControlAPI.Services.ControleMensalService
             return user;
         }
 
-        public async Task<ControleMensal> NewBill(ControleMensalDTO conta, string userEmail)
+        public async Task<RegistroFinanceiroMensal> NewBill(RegistroFinanceiroMensalDTO conta, string userEmail)
         {
 
-            var userInformations = _context.ControleMensal.
+            var userInformations = _context.RegistroFinanceiroMensal.
               Include(user => user.User).
-              Include(mescontrole => mescontrole.MesControle).
+              Include(mescontrole => mescontrole.MesReferencia).
               Include(categoria => categoria.Categorias).
               FirstOrDefault(user =>
                 user.User!.Email == userEmail &&
@@ -51,36 +52,34 @@ namespace TotalControlAPI.Services.ControleMensalService
                 user.CategoriaId == conta.CategoriaId
               );
 
-            var newBilling = _mapper.Map<ControleMensal>(conta);
+            var newBilling = _mapper.Map<RegistroFinanceiroMensal>(conta);
             if(userInformations != null )
             {
                 newBilling.UserId = userInformations!.Id;
-                newBilling.CategoriaId = conta.CategoriaId;
-                newBilling.NomeCategoria = userInformations.NomeCategoria;
+                newBilling.CategoriaId = conta.CategoriaId;              
                 newBilling.DiaInclusao = conta.DiaInclusao;
                 newBilling.TipoConta = userInformations.Categorias!.TipoCategorias;
-                newBilling.MesId = conta!.MesId;
-                newBilling.Mes = userInformations!.Mes;
+                newBilling.MesId = conta!.MesId;                
                 newBilling.ValorDaConta = conta.ValorDaConta;
                 newBilling.Descricao = conta.Descricao;        
             }
                  
-            _context.ControleMensal.Add(newBilling);
+            _context.RegistroFinanceiroMensal.Add(newBilling);
             await _context.SaveChangesAsync();
 
             return newBilling;
         }
 
-        public async Task<ControleMensal> UpdateBill(ControleMensalDTO conta, string userEmail)
+        public async Task<RegistroFinanceiroMensal> UpdateBill(RegistroFinanceiroMensalDTO conta, string userEmail)
         {
-            var updateBill = _context.ControleMensal.FirstOrDefault(u =>
+            var updateBill = _context.RegistroFinanceiroMensal.FirstOrDefault(u =>
                 u.User!.Email == userEmail &&
                 u.Id == conta.Id
             ) ?? throw new InvalidOperationException("Conta não encontrada.");
 
 
-            updateBill = _mapper.Map<ControleMensal>(conta);
-            _context.ControleMensal.Update(updateBill);
+            updateBill = _mapper.Map<RegistroFinanceiroMensal>(conta);
+            _context.RegistroFinanceiroMensal.Update(updateBill);
             await _context.SaveChangesAsync();
 
             return updateBill;

@@ -2,7 +2,7 @@
 
 namespace TotalControlAPI.DTO_s
 {
-    public class ControleMensalDTO
+    public class RegistroFinanceiroMensalDTO
     {
         public int Id { get; set; }
         public int CategoriaId { get; set; }
