@@ -30,7 +30,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPost("login"), AllowAnonymous]
-        public ActionResult<Users> login(UserRequestDTO request)
+        public ActionResult<string> login(UserRequestDTO request)
         {
 
             var user = _dataContext.Users.SingleOrDefault(u => u.Email == request.Email);
@@ -87,7 +87,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPost("register"), AllowAnonymous]
-        public async Task<ActionResult<Users>> Register(UserRegisterDTO user)
+        public async Task<ActionResult<string>> Register(UserRegisterDTO user)
         {
             try
             {

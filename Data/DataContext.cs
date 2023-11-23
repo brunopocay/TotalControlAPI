@@ -28,7 +28,25 @@ namespace TotalControlAPI.Data
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-            modelBuilder.Entity<Users>().HasOne(endereco => endereco.Endereco).WithOne(user => user.Users).HasForeignKey<Endereco>(end => end.UserId);
+            modelBuilder.Entity<Users>()
+                .HasOne(endereco => endereco.Endereco)
+                .WithOne(user => user.Users)
+                .HasForeignKey<Endereco>(end => end.UserId);
+
+			modelBuilder.Entity<RegistroFinanceiroMensal>()
+	           .HasOne(rfm => rfm.User)
+	           .WithMany()
+	           .HasForeignKey(rfm => rfm.UserId);
+
+			modelBuilder.Entity<RegistroFinanceiroMensal>()
+				.HasOne(rfm => rfm.Categorias)
+				.WithMany()
+				.HasForeignKey(rfm => rfm.CategoriaId);
+
+			modelBuilder.Entity<RegistroFinanceiroMensal>()
+				.HasOne(rfm => rfm.MesReferencia)
+				.WithMany()
+				.HasForeignKey(rfm => rfm.MesId);
 		}
 
 	}

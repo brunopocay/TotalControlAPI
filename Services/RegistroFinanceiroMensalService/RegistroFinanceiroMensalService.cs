@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TotalControlAPI.DTO_s;
+using TotalControlAPI.Profiles;
 
 namespace TotalControlAPI.Services.ControleMensalService
 {
@@ -14,75 +16,92 @@ namespace TotalControlAPI.Services.ControleMensalService
             _context = context;
         }
 
-        public async Task<RegistroFinanceiroMensal> DeleteBill(RegistroFinanceiroMensalDTO conta, string userEmail)
+        public async Task<RegistroFinanceiroMensal> DeleteBill(DeleteRegistroFinanceiroMensalDTO conta, string userEmail)
         {
             var deleteBill = _context.RegistroFinanceiroMensal.FirstOrDefault(u =>
                 u.User!.Email == userEmail &&
                 u.Id == conta.Id
             ) ?? throw new InvalidOperationException("Esta conta não existe ou já foi apagada.");
 
+
             _context.RegistroFinanceiroMensal.Remove(deleteBill);
             await _context.SaveChangesAsync();
             return deleteBill;
         }
 
-        public async Task<List<RegistroFinanceiroMensal>> GetBills(string userEmail)
+        public async Task<List<GetRegistroFinanceiroMensalDTO>> GetBills(string userEmail)
         {
-            //TODO : Fzer um DTO para retornar objeto de leitura somente com as informações necessarias.
-            var user = await _context.RegistroFinanceiroMensal.Where(u => u.User!.Email == userEmail ).ToListAsync();
+            var user = await _context.RegistroFinanceiroMensal
+                .Include(mes => mes.MesReferencia)
+                .Include(categoria => categoria.Categorias)
+                .Where(u => u.User!.Email == userEmail).ToListAsync();
 
+            if(user.Count == 0)
+            {
+				throw new InvalidOperationException("Nenhum registro financeiro encontrado para o usuário especificado.");
+			}
+
+            List<GetRegistroFinanceiroMensalDTO> resultDTO = new();
+            foreach (var conta in user)
+            {
+                var mappedResult = _mapper.Map<GetRegistroFinanceiroMensalDTO>(conta);
+                resultDTO.Add(mappedResult);
+            }
+			return resultDTO;
+		}
+
+        public async Task<ReadRegistroFinanceiroMensalDTO> NewBill(CreateRegistroFinanceiroMensalDTO conta, string userEmail)
+        {
+            var user = _context.RegistroFinanceiroMensal.FirstOrDefault(u => u.User!.Email == userEmail);
             if(user is null)
-            {
-                throw new InvalidOperationException("Usuário não encontrado");
-            }
+				throw new Exception("Usuário não encontrado");
 
-            return user;
-        }
+            var userMesReferencia = _context.MesReferencia.FirstOrDefault(mes => mes.Id == conta.MesId);
+            if (userMesReferencia is null)
+                throw new Exception("Mês de referência não encontrado");
 
-        public async Task<RegistroFinanceiroMensal> NewBill(RegistroFinanceiroMensalDTO conta, string userEmail)
-        {
+            var userCategoria = _context.Categorias.FirstOrDefault(categoria => categoria.Id == conta.CategoriaId);
+            if (userCategoria is null)
+				throw new Exception("Categoria não encontrado");
 
-            var userInformations = _context.RegistroFinanceiroMensal.
-              Include(user => user.User).
-              Include(mescontrole => mescontrole.MesReferencia).
-              Include(categoria => categoria.Categorias).
-              FirstOrDefault(user =>
-                user.User!.Email == userEmail &&
-                user.MesId == conta.MesId && 
-                user.CategoriaId == conta.CategoriaId
-              );
+			var newBilling = _mapper.Map<RegistroFinanceiroMensal>(conta);
+			newBilling = new RegistroFinanceiroMensal
+			{
+				UserId = user.UserId,
+				CategoriaId = conta.CategoriaId,
+				DiaInclusao = conta.DiaInclusao,
+				TipoConta = userCategoria.TipoCategorias,
+				MesId = conta.MesId,
+				ValorDaConta = conta.ValorDaConta,
+				Descricao = conta.Descricao
+			};
 
-            var newBilling = _mapper.Map<RegistroFinanceiroMensal>(conta);
-            if(userInformations != null )
-            {
-                newBilling.UserId = userInformations!.Id;
-                newBilling.CategoriaId = conta.CategoriaId;              
-                newBilling.DiaInclusao = conta.DiaInclusao;
-                newBilling.TipoConta = userInformations.Categorias!.TipoCategorias;
-                newBilling.MesId = conta!.MesId;                
-                newBilling.ValorDaConta = conta.ValorDaConta;
-                newBilling.Descricao = conta.Descricao;        
-            }
-                 
-            _context.RegistroFinanceiroMensal.Add(newBilling);
+			_context.RegistroFinanceiroMensal.Add(newBilling);
             await _context.SaveChangesAsync();
 
-            return newBilling;
+            var resultDTO = _mapper.Map<ReadRegistroFinanceiroMensalDTO>(newBilling);
+            return resultDTO;
         }
 
-        public async Task<RegistroFinanceiroMensal> UpdateBill(RegistroFinanceiroMensalDTO conta, string userEmail)
+        public async Task<ReadRegistroFinanceiroMensalDTO> UpdateBill(UpdateRegistroFinanceiroMensalDTO conta, string userEmail)
         {
-            var updateBill = _context.RegistroFinanceiroMensal.FirstOrDefault(u =>
+            var atualizarRegistro = _context.RegistroFinanceiroMensal.FirstOrDefault(u =>
                 u.User!.Email == userEmail &&
                 u.Id == conta.Id
-            ) ?? throw new InvalidOperationException("Conta não encontrada.");
+            ) ?? throw new InvalidOperationException("Registro financeiro não encontrado.");
 
+            atualizarRegistro.Id = conta.Id;
+            if(conta.CategoriaId.HasValue)
+            {
+                atualizarRegistro.CategoriaId = conta.CategoriaId.Value;
+            }
+			atualizarRegistro.ValorDaConta = conta.ValorDaConta;
+			atualizarRegistro.Descricao = conta.Descricao;
+			atualizarRegistro.DataAlteracao = conta.DataAlteracao;
+			await _context.SaveChangesAsync();
 
-            updateBill = _mapper.Map<RegistroFinanceiroMensal>(conta);
-            _context.RegistroFinanceiroMensal.Update(updateBill);
-            await _context.SaveChangesAsync();
-
-            return updateBill;
+            var resultDTO = _mapper.Map<ReadRegistroFinanceiroMensalDTO>(atualizarRegistro);
+            return resultDTO;
         }
     }
 }

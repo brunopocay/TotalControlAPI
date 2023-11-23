@@ -15,6 +15,7 @@ namespace TotalControlAPI.Models
         public int MesId { get; set; }
         public virtual MesReferencia? MesReferencia { get; set; }
         public string? DiaInclusao { get; set; }
+        public string? DataAlteracao {  get; set; }
         public int ValorDaConta { get; set; }
         public int Saldo { get; set; }
         public string? Descricao { get; set; }

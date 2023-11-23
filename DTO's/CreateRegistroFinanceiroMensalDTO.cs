@@ -2,7 +2,7 @@
 
 namespace TotalControlAPI.DTO_s
 {
-    public class RegistroFinanceiroMensalDTO
+    public class CreateRegistroFinanceiroMensalDTO
     {
         public int Id { get; set; }
         public int CategoriaId { get; set; }
@@ -10,8 +10,8 @@ namespace TotalControlAPI.DTO_s
         public int ValorDaConta { get; set; }
         [Required(ErrorMessage = "Campo descrição obrigatório.")]
         public string? Descricao { get; set; }
-        [Required(ErrorMessage = "Campo dia da inclusão obrigatório.")]
-        public required string DiaInclusao { get; set; }
+        [Required(ErrorMessage = "Campo data da inclusão obrigatório.")]
+        public string? DiaInclusao { get; set; }
         public int MesId { get; set; }
     }
 }

@@ -3,12 +3,11 @@ using TotalControlAPI.DTO_s;
 
 namespace TotalControlAPI.Profiles
 {
-    public class AutoMapperProfile : Profile
+    public class AuthUserProfile : Profile
     {
-        public AutoMapperProfile()
+        public AuthUserProfile()
         {
             CreateMap<UserRegisterDTO, Users>();
-            CreateMap<RegistroFinanceiroMensalDTO, RegistroFinanceiroMensal>();
         }
     }
 }

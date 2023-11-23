@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TotalControlAPI.Data;
 
@@ -10,9 +11,11 @@ using TotalControlAPI.Data;
 namespace TotalControlAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231123033114_CorrigindoChavesEstrangeiras")]
+    partial class CorrigindoChavesEstrangeiras
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,9 +151,6 @@ namespace TotalControlAPI.Migrations
 
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
-
-                    b.Property<string>("DataAlteracao")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Descricao")
                         .HasColumnType("longtext");

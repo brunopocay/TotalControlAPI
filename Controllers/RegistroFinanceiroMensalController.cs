@@ -23,7 +23,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<RegistroFinanceiroMensal>>> GetBills()
+        public async Task<ActionResult<List<ReadRegistroFinanceiroMensalDTO>>> GetBills()
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
             var result = await _registroMensal.GetBills(userEmail);
@@ -32,7 +32,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<RegistroFinanceiroMensal>> NewBill(RegistroFinanceiroMensalDTO conta)
+        public async Task<ActionResult<ReadRegistroFinanceiroMensalDTO>> NewBill(CreateRegistroFinanceiroMensalDTO conta)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
 
@@ -43,7 +43,7 @@ namespace TotalControlAPI.Controllers
             }
             catch (DbUpdateException dbError)
             {
-                return BadRequest($"Erro interno do banco de dados: {dbError.Message}");
+                return StatusCode(500, $"Erro interno do banco de dados: {dbError}");
             }
             catch (Exception error )
             {
@@ -53,14 +53,14 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<RegistroFinanceiroMensal>> DeleteBill(RegistroFinanceiroMensalDTO conta)
+        public async Task<ActionResult<string>> DeleteBill(DeleteRegistroFinanceiroMensalDTO conta)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
 
             try
             {
                 await _registroMensal.DeleteBill(conta, userEmail);
-                return Ok(conta);
+                return Ok(new {message = "Registro excluído com sucesso." });
             }
             catch (DbUpdateException dbError)
             {
@@ -73,7 +73,7 @@ namespace TotalControlAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<RegistroFinanceiroMensal>> UpdateBill(RegistroFinanceiroMensalDTO conta)
+        public async Task<ActionResult<ReadRegistroFinanceiroMensalDTO>> UpdateBill(UpdateRegistroFinanceiroMensalDTO conta)
         {
             var userEmail = User.FindFirst(ClaimTypes.Email)!.Value;
 
@@ -84,7 +84,7 @@ namespace TotalControlAPI.Controllers
             }
             catch (DbUpdateException dbError)
             {
-                return BadRequest($"Erro interno de servidor: {dbError.Message}");
+                return StatusCode(500, $"Erro interno de servidor: {dbError}");
             }
             catch (Exception error)
             {
