@@ -30,6 +30,7 @@ namespace TotalControlAPI.Services.CategoryServices
             foreach (var categoria in user)
             {
                 var resultMapped = _mapper.Map<ReadCategoriaDTO>(categoria);
+                resultMapped.CategoriaId = categoria.Id;
                 result.Add(resultMapped);
             }
 

@@ -28,7 +28,9 @@ namespace TotalControlAPI.Services.MesControleService
             foreach (var mes in userMonths)
             {
                 var mappedMonth = _mapper.Map<ReadMesReferenciaDTO>(mes);
+                mappedMonth.Id = mes.Id;
                 result.Add(mappedMonth);
+
             }
 
             return result;

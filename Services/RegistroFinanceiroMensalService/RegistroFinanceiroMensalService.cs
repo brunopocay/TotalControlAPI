@@ -52,7 +52,7 @@ namespace TotalControlAPI.Services.ControleMensalService
 
         public async Task<ReadRegistroFinanceiroMensalDTO> NewBill(CreateRegistroFinanceiroMensalDTO conta, string userEmail)
         {
-            var user = _context.RegistroFinanceiroMensal.FirstOrDefault(u => u.User!.Email == userEmail);
+            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
             if(user is null)
 				throw new Exception("Usuário não encontrado");
 
@@ -67,7 +67,7 @@ namespace TotalControlAPI.Services.ControleMensalService
 			var newBilling = _mapper.Map<RegistroFinanceiroMensal>(conta);
 			newBilling = new RegistroFinanceiroMensal
 			{
-				UserId = user.UserId,
+				UserId = user.Id,
 				CategoriaId = conta.CategoriaId,
 				DiaInclusao = conta.DiaInclusao,
 				TipoConta = userCategoria.TipoCategorias,
@@ -80,7 +80,7 @@ namespace TotalControlAPI.Services.ControleMensalService
             await _context.SaveChangesAsync();
 
             var resultDTO = _mapper.Map<ReadRegistroFinanceiroMensalDTO>(newBilling);
-            return resultDTO;
+             return resultDTO;
         }
 
         public async Task<ReadRegistroFinanceiroMensalDTO> UpdateBill(UpdateRegistroFinanceiroMensalDTO conta, string userEmail)
